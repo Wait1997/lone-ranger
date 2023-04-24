@@ -2842,14 +2842,6 @@ commander@^9.4.1:
   resolved "https://registry.npmmirror.com/commander/-/commander-9.5.0.tgz#bc08d1eb5cedf7ccb797a96199d41c7bc3e60d30"
   integrity sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==
 
-commitlint@^17.6.1:
-  version "17.6.1"
-  resolved "https://registry.npmmirror.com/commitlint/-/commitlint-17.6.1.tgz#9dff9b7ab681a33a330284bb3761df568adaaba9"
-  integrity sha512-yO11o5DmN/X4VCL+aLzgfJ1YXOM7qFzMN659SpISS4EBiv+QO16A0jeJU9rgVRbM2K06M7AfBQkZz7EPR3sAnQ==
-  dependencies:
-    "@commitlint/cli" "^17.6.1"
-    "@commitlint/types" "^17.4.4"
-
 common-path-prefix@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmmirror.com/common-path-prefix/-/common-path-prefix-3.0.0.tgz#7d007a7e07c58c4b4d5f433131a19141b29f11e0"
