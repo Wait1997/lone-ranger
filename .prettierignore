@@ -1,0 +1,9 @@
+# .prettierignore
+
+/node_modules
+/build
+/package-lock.json
+/yarn.lock
+
+# readme
+README.md
