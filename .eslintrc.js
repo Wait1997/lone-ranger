@@ -14,6 +14,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'standard-with-typescript',
+    'prettier',
     'plugin:prettier/recommended'
   ],
   overrides: [],
@@ -22,12 +23,12 @@ module.exports = {
     sourceType: 'module',
     project: ['./tsconfig.json']
   },
-  plugins: ['react', 'react-hooks'],
+  plugins: ['prettier', 'react', 'react-hooks'],
   rules: {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'off',
     'react/prop-types': 'off',
-    'prettier/prettier': ['error', { arrowParens: 'always' }],
+    'prettier/prettier': ['error', { arrowParens: 'always' }], // 开启prettier的自我修复功能
     '@typescript-eslint/explicit-function-return-type': 'off', // 要求函数必须标注返回类型
     'react/react-in-jsx-scope': 'off', // 现在已经不需要在文件顶部引入import react from react
     '@typescript-eslint/strict-boolean-expressions': 'off',
@@ -35,12 +36,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/promise-function-async': 'off',
     'prefer-promise-reject-errors': 'warn',
-    '@typescript-eslint/no-misused-promises': [
-      'error',
-      {
-        checksVoidReturn: false
-      }
-    ],
+    '@typescript-eslint/no-misused-promises': 'off',
     '@typescript-eslint/consistent-type-assertions': 'off',
     '@typescript-eslint/no-dynamic-delete': 'off',
     'no-debugger': 'warn'

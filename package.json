@@ -16,8 +16,13 @@
     "lint:prettier": "prettier --write --loglevel warn \"src/**/*.{js,ts,json,tsx,css,less,html,md}\"",
     "lint:eslint": "eslint --fix --ext .ts,.tsx ./src",
     "prepare": "husky install",
-    "typeCheck": "tsc --noEmit",
     "build:analy": "webpack-bundle-analyzer ./build/stats.json"
+  },
+  "lint-staged": {
+    "**/*.{js,tsx,ts}": [
+      "yarn lint:eslint",
+      "git add ."
+    ]
   },
   "browserslist": {
     "production": [
