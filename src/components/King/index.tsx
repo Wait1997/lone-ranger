@@ -29,16 +29,16 @@ export interface FormProps {
   className?: string;
   initialValues?: Record<string, any>;
   validateTrigger?: ValidateTrigger;
-  onSubmit?: () => any;
-  onChange?: () => any;
+  onSubmit?: (values: Record<string, any>) => void;
+  onChange?: (values: Record<string, any>, { name, value }: { name: string; value: any }) => void;
 }
 
 export interface ItemProps {
-  name: string;
-  label: React.ReactNode;
-  required: boolean;
-  rules: Rules;
-  className: string;
+  name?: string;
+  label?: React.ReactNode;
+  required?: boolean;
+  rules?: Rules;
+  className?: string;
 }
 
 const defaultContext = { state: { errors: {}, values: {}, itemRefs: {} } };
@@ -141,10 +141,15 @@ const FormwardItem = forwardRef<ItemInstance, PropsWithChildren<ItemProps>>(func
   } = useContext(FormContext);
 
   // 检验时机
-  const validateTiming = useMemo(
-    () => (typeof validateTrigger === 'object' ? validateTrigger[name] ?? 'onBlur' : validateTrigger ?? 'onBlur'),
-    [validateTrigger]
-  );
+  const validateTiming = useMemo(() => {
+    if (typeof validateTrigger === 'object') {
+      if (name) {
+        return validateTrigger[name] ?? 'onBlur';
+      }
+      return 'onBlur';
+    }
+    return validateTrigger ?? 'onBlur';
+  }, [validateTrigger]);
 
   const validateValue = async (value: any, rules: Rules): Promise<ValidateValue> => {
     if (rules.required && (value ?? '').trim() === '') {
@@ -177,8 +182,18 @@ const FormwardItem = forwardRef<ItemInstance, PropsWithChildren<ItemProps>>(func
   useImperativeHandle(
     ref,
     () => ({
-      validateValue: async () => await validateValue(values[name], rules),
-      validateAndControlError: async () => await validateAndControlError(values[name], rules)
+      validateValue: async () => {
+        if (name && rules) {
+          return await validateValue(values[name], rules);
+        }
+        return { pass: true };
+      },
+      validateAndControlError: async () => {
+        if (name && rules) {
+          return await validateAndControlError(values[name], rules);
+        }
+        return true;
+      }
     }),
     [values]
   );
@@ -187,30 +202,39 @@ const FormwardItem = forwardRef<ItemInstance, PropsWithChildren<ItemProps>>(func
     const value = event.target.value;
     // 派发更新表单项的值
     dispatch({ type: 'value.change', payload: { name, value } });
-    func?.onChange?.({ ...values, [name]: value }, { name, value });
-    validateTiming === 'onChange' && (await validateAndControlError(value, rules));
+    // 当name存在时才会触发change事件
+    if (name) {
+      func?.onChange?.({ ...values, [name]: value }, { name, value });
+    }
+    if (rules) {
+      validateTiming === 'onChange' && (await validateAndControlError(value, rules));
+    }
   };
 
   const handleBlur = async (event: React.ChangeEvent<HTMLFormElement>) => {
     const value = event.target.value;
-    validateTiming === 'onBlur' && (await validateAndControlError(value, rules));
+    if (rules) {
+      validateTiming === 'onBlur' && (await validateAndControlError(value, rules));
+    }
   };
 
   const getControlledProps = () => {
     return {
       name,
-      value: values[name],
+      value: name && values[name],
       onBlur: handleBlur,
       onChange: handleValueChange
     };
   };
 
   useEffect(() => {
-    dispatch({
-      type: 'itemRef.change',
-      // 父组件调用 validateAndControlError 校验合法性(注册)
-      payload: { name, value: { validateAndControlError: async (v: any) => await validateAndControlError(v, rules) } }
-    });
+    if (rules) {
+      dispatch({
+        type: 'itemRef.change',
+        // 父组件调用 validateAndControlError 校验合法性(注册)
+        payload: { name, value: { validateAndControlError: async (v: any) => await validateAndControlError(v, rules) } }
+      });
+    }
   }, [validateAndControlError]);
 
   return (
@@ -220,7 +244,7 @@ const FormwardItem = forwardRef<ItemInstance, PropsWithChildren<ItemProps>>(func
           ? React.cloneElement(children, getControlledProps())
           : React.cloneElement(children)
         : children}
-      {!!errors[name] && <Message message={errors[name]} />}
+      {name && !!errors[name] && <Message message={errors[name]} />}
     </Label>
   );
 });
@@ -233,7 +257,7 @@ function Submit({ children }: { children: React.ReactNode }) {
 
   const getControllProps = () => ({ onClick: () => func?.onSubmit?.(values) });
 
-  return React.isValidElement(children) && React.cloneElement(children, getControllProps());
+  return <>{React.isValidElement(children) && React.cloneElement(children, getControllProps())}</>;
 }
 
 ForwardForm.displayName = 'Form';
@@ -245,4 +269,4 @@ type FunctionFormType = typeof ForwardForm & { Item: typeof FormwardItem; Submit
 (ForwardForm as FunctionFormType).Item = FormwardItem;
 (ForwardForm as FunctionFormType).Submit = Submit;
 
-export default ForwardForm;
+export default ForwardForm as FunctionFormType;

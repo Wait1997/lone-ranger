@@ -61,7 +61,7 @@ export interface ProviderValue<T = any> {
   dispatch?: T;
   validateTrigger?: ValidateTrigger;
   func?: {
-    onSubmit?: (values: Record<string, any>) => any;
+    onSubmit?: (values: Record<string, any>) => void;
     onChange?: (values: Record<string, any>, { name, value }: { name: string; value: any }) => void;
   };
 }

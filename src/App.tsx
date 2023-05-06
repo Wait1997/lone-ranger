@@ -6,6 +6,8 @@ import Dashboard from '@/pages/Dashboard';
 import styles from './App.less';
 import Upload from '@/components/Upload';
 import TestForForm from '@/pages/TestForForm';
+import TestForKing from '@/pages/TestForKing';
+import { Divider } from 'antd';
 
 export interface ProvideState {
   current: {
@@ -41,6 +43,8 @@ export default function App() {
     <Provider value={store}>
       <div className={styles.container}>
         <TestForForm />
+        <Divider />
+        <TestForKing />
       </div>
       <Upload.Text disabled={true} file={{}} />
       {memoElement}

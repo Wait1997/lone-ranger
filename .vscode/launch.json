@@ -4,8 +4,6 @@
       "name": "Launch Chrome",
       "request": "launch",
       "type": "chrome",
-      "userDataDir": true,
-      "runtimeExecutable": "stable",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}"
     }
