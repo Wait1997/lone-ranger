@@ -24,6 +24,7 @@ import type {
 import Label from './Label';
 import Message from './Message';
 import cn from 'classnames';
+import styles from './index.less';
 
 export interface FormProps {
   className?: string;
@@ -121,7 +122,7 @@ const ForwardForm = forwardRef<Instance, PropsWithChildren<FormProps>>(function 
   );
 
   return (
-    <div className={cn(className)}>
+    <div className={cn(styles['form-king-wrap'], className)}>
       <FormContext.Provider value={value}>
         {React.Children.map(children, (Child) => (React.isValidElement(Child) ? React.cloneElement(Child) : Child))}
       </FormContext.Provider>

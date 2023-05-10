@@ -2,12 +2,14 @@ import { useRef } from 'react';
 import { Input, Button } from 'antd';
 import Form from '@/components/King/index';
 import { type Instance } from '@/components/King/type';
+import styles from './index.less';
 
 export default function Kings() {
   const formEl = useRef<Instance>(null);
   return (
     <Form
       ref={formEl}
+      className={styles['form-wrap']}
       onSubmit={async (values) => {
         const result = await formEl.current?.validateAndControlError();
         if (result) {
